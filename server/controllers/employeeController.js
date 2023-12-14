@@ -29,6 +29,26 @@ exports.createEmployee = asyncWrapper(async (req, res, next) => {
   res.status(200).json({ newEmployee, message: 'Employee added successfully' });
 });
 
+// get employee
+exports.getEmployees = asyncWrapper(async (req, res, next) => {
+  const { name, email, department, position, minSalary, maxSalary } = req.query;
+  let filters = {};
+
+  if (name) filters.name = { $regex: new RegExp(name, 'i') };
+  if (department) filters.department = { $regex: new RegExp(department, 'i') };
+  if (position) filters.position = { $regex: new RegExp(position, 'i') };
+  if (email) filters.email = email;
+  if (minSalary && maxSalary) {
+    filters.salary = { $gte: parseInt(minSalary), $lte: parseInt(maxSalary) };
+  } else {
+    if (minSalary) filters.salary = { $gte: parseInt(minSalary) };
+    if (maxSalary) filters.salary = { $lte: parseInt(maxSalary) };
+  }
+
+  const employees = await Employee.find({ ...filters });
+  res.status(200).json({ employees });
+});
+
 // updating the exiting Employee
 exports.updateEmployee = asyncWrapper(async (req, res, next) => {
   const { id } = req.params;
