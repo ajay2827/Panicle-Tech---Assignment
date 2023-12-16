@@ -43,18 +43,20 @@ const Employees = () => {
   );
 
   const handleEdit = (employee) => {
-    // Open a modal or form to edit employee details
-    // You can implement a separate EditEmployee component or a modal for editing here
-    console.log('Editing employee:', employee);
+    localStorage.setItem('editEmployee', JSON.stringify(employee));
+    window.location.href = '/addEmployee';
+    setShowModal(false);
   };
 
-  const handleDelete = (employeeId) => {
+  const handleDelete = (employee) => {
+    const id = employee._id;
     axios
-      .delete(`http://localhost:5500/api/v1/employee/${employeeId}`)
+      .delete(`http://localhost:5500/api/v1/employee/${id}`)
       .then((response) => {
         setEmployeeData((prevEmployees) =>
-          prevEmployees.filter((employee) => employee.id !== employeeId)
+          prevEmployees.filter((employee) => employee._id !== id)
         );
+        setShowModal(false);
       })
       .catch((error) => {
         console.error('Error deleting employee:', error);
@@ -88,6 +90,9 @@ const Employees = () => {
             <th onClick={() => sortData('name')}>
               Name {getSortIndicator('name')}
             </th>
+            <th onClick={() => sortData('email')}>
+              Email {getSortIndicator('email')}
+            </th>
             <th onClick={() => sortData('department')}>
               Department {getSortIndicator('department')}
             </th>
@@ -117,6 +122,7 @@ const Employees = () => {
                   {employee.name}
                 </Button>
               </td>
+              <td>{employee.email}</td>
               <td>{employee.department}</td>
               <td>{employee.position}</td>
               <td>{employee.salary}</td>
@@ -144,10 +150,10 @@ const Employees = () => {
           <Modal.Title>{selectedEmployee?.name}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <p>Email: {selectedEmployee?.email}</p>
           <p>Department: {selectedEmployee?.department}</p>
           <p>Position: {selectedEmployee?.position}</p>
           <p>Salary: {selectedEmployee?.salary}</p>
-          {/* Add buttons for editing or deleting here */}
           <div>
             <Button
               variant="primary"
@@ -157,7 +163,7 @@ const Employees = () => {
             </Button>{' '}
             <Button
               variant="danger"
-              onClick={() => handleDelete(selectedEmployee.id)}
+              onClick={() => handleDelete(selectedEmployee)}
             >
               Delete
             </Button>

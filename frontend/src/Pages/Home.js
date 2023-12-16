@@ -16,7 +16,6 @@ const Home = () => {
       .then((response) => {
         const result = response.data.employees;
         setEmployeeData(result);
-        console.log(employeeData);
 
         const totalEmp = employeeData.length;
         setTotalEmployees(totalEmp);
@@ -26,7 +25,6 @@ const Home = () => {
           0
         );
         const avgSalary = totalSalary / totalEmp;
-        console.log(avgSalary);
         setAverageSalary(avgSalary);
 
         createDashboardChart(totalEmp, avgSalary);
@@ -89,14 +87,10 @@ const Home = () => {
             backgroundColor: [
               'rgba(255, 99, 132, 0.6)',
               'rgba(54, 162, 235, 0.6)',
-              // Add more colors as needed for additional departments
+              'rgba(30, 160, 130, 0.6)',
             ],
           },
         ],
-      },
-      options: {
-        // Chart.js options here
-        // Example: legend, tooltips, etc.
       },
     });
   };
@@ -108,7 +102,6 @@ const Home = () => {
         emp.name.toLowerCase().includes(searchQuery) ||
         emp.department.toLowerCase().includes(searchQuery) ||
         emp.position.toLowerCase().includes(searchQuery)
-        // Add more fields for filtering as needed
       );
     });
     setFilteredEmployees(filtered);

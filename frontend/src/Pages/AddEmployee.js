@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -20,18 +20,34 @@ const AddEmployee = () => {
       toast.error('Please fill in all fields.');
       return;
     }
+    const editEmployee = localStorage.getItem('editEmployee');
+    if (editEmployee) {
+      const id = formData._id;
+      const response = await axios.put(
+        `http://localhost:5500/api/v1/employee/${id}`,
+        formData
+      );
+      if (response.status !== 200) {
+        toast.error(response.data.message);
+        return;
+      }
 
-    const response = await axios.post(
-      'http://localhost:5500/api/v1/employee',
-      formData
-    );
-    console.log(response);
-    if (response.status !== 200) {
-      toast.error(response.data.message);
-      return;
+      toast.success('Employee data edit successfully');
+      localStorage.removeItem('editEmployee');
+      setTimeout(() => {
+        window.location.href = '/employees';
+      }, 1000);
+    } else {
+      const response = await axios.post(
+        'http://localhost:5500/api/v1/employee',
+        formData
+      );
+      if (response.status !== 200) {
+        toast.error(response.data.message);
+        return;
+      }
+      toast.success('Employee added successfully');
     }
-
-    toast.success('Employee added successfully');
     setFormData({
       name: '',
       email: '',
@@ -40,6 +56,14 @@ const AddEmployee = () => {
       salary: '',
     });
   };
+
+  useEffect(() => {
+    const editEmployee = localStorage.getItem('editEmployee');
+    if (editEmployee) {
+      const employeeData = JSON.parse(editEmployee);
+      setFormData(employeeData);
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
