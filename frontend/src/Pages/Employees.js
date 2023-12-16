@@ -14,7 +14,7 @@ const Employees = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:5500/api/v1/employee')
+      .get('https://panicle-tech-assignment.vercel.app/api/v1/employee')
       .then((response) => {
         const result = response.data.employees;
         setEmployeeData(result);
@@ -51,7 +51,9 @@ const Employees = () => {
   const handleDelete = (employee) => {
     const id = employee._id;
     axios
-      .delete(`http://localhost:5500/api/v1/employee/${id}`)
+      .delete(
+        `https://panicle-tech-assignment.vercel.app/api/v1/employee/${id}`
+      )
       .then((response) => {
         setEmployeeData((prevEmployees) =>
           prevEmployees.filter((employee) => employee._id !== id)

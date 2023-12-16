@@ -24,7 +24,7 @@ const AddEmployee = () => {
     if (editEmployee) {
       const id = formData._id;
       const response = await axios.put(
-        `http://localhost:5500/api/v1/employee/${id}`,
+        `https://panicle-tech-assignment.vercel.app/api/v1/employee/${id}`,
         formData
       );
       if (response.status !== 200) {
@@ -39,7 +39,7 @@ const AddEmployee = () => {
       }, 1000);
     } else {
       const response = await axios.post(
-        'http://localhost:5500/api/v1/employee',
+        'https://panicle-tech-assignment.vercel.app/api/v1/employee',
         formData
       );
       if (response.status !== 200) {

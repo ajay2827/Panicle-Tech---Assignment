@@ -12,7 +12,7 @@ const Home = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:5500/api/v1/employee')
+      .get('https://panicle-tech-assignment.vercel.app/api/v1/employee')
       .then((response) => {
         const result = response.data.employees;
         setEmployeeData(result);
